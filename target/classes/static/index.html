@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www/thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<title>Insert title here</title>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>	
+
+</head>
+<body>
+
+<button class="btn  btn-primary" name="list" onclick="httptrace()">列表</button>
+<br>
+<br>
+
+<script>
+function httptrace(){
+	$.ajax({
+        type:"GET",                    
+        url: "/actuator/httptrace",    
+        contentType: "application/json;charset=utf-8",
+        success : function(result){
+        	console.log(result.traces.length);
+        	console.log(result.traces[2].request.method);
+        	document.getElementById("body1").innerHTML = '';
+        	document.getElementById("body1").innerHTML += '<table border ="1" class="table table-striped"><thead class="thead-dark"><tr><th scope="col">timestamp</th><th scope="col">method</th><th scope="col">uri</th><th scope="col">status</th><th scope="col">session</th></tr></thead></table>';
+    		for(m = 0; m < result.traces.length; m++)			
+    		{	
+    			//document.getElementById("body1").innerHTML += result.traces[m].timestamp;
+    			document.getElementById("body1").innerHTML += '<table border ="1" class="table table-striped"><tbody class="table-striped"><tr><th scope="row">'+ result.traces[m].timestamp + '</th><td>' + result.traces[m].request.method + '</td><td>' + result.traces[m].request.uri + '</td><td>' + result.traces[m].response.status + '</td><td>' + result.traces[m].response.session + '</td></tr></tbody></table></br></br>';
+    		}
+    	},
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+        }
+	});
+}
+
+</script>
+<div id = "body1"></div>
+</body>
+</html>
